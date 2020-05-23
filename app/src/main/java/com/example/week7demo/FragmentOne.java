@@ -55,8 +55,7 @@ public class FragmentOne extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_one, container, false);
-        imageView1 = v.findViewById(R.id.imageView_1);
-        textView1 = v.findViewById(R.id.textView_1);
+
         return v;
     }
 
