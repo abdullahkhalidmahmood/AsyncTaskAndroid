@@ -8,11 +8,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 public class PagerAdapter extends FragmentPagerAdapter {
 
-    private String[] tabTitles = {"FragOne", "FragTwo"};
+    private String[] tabTitles = {"FIRST-PERSON SHOOTER", "ROLE-PLAYING GAME"};
     private String[] urls;
-    public PagerAdapter(@NonNull FragmentManager fm, int behavior, String urls[]) {
+    public PagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
-        this.urls = urls;
     }
 
     @NonNull
@@ -20,9 +19,9 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return FragmentOne.newInstance(urls[position],"Tesla");
+                return FragmentOne.newInstance();
             case 1:
-                return FragmentTwo.newInstance(urls[position],"BMW");
+                return FragmentTwo.newInstance();
         }
         return null;
     }

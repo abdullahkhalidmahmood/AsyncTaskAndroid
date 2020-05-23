@@ -3,14 +3,22 @@ package com.example.week7demo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 
 public class FragmentOne extends Fragment {
@@ -22,6 +30,11 @@ public class FragmentOne extends Fragment {
     private ImageView imageView1;
     private TextView textView1;
 
+    RecyclerView recyclerView;
+    RecyclerViewAdapter recyclerViewAdapter;
+    StaggeredGridLayoutManager staggeredGridLayoutManager;
+    private ArrayList<GameModel> gameModels = new ArrayList<>();
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -32,12 +45,9 @@ public class FragmentOne extends Fragment {
 
 
     // TODO: Rename and change types and number of parameters
-    public static FragmentOne newInstance(String param1, String param2) {
+    public static FragmentOne newInstance() {
         FragmentOne fragment = new FragmentOne();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -56,14 +66,38 @@ public class FragmentOne extends Fragment {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_one, container, false);
 
+        //TODO: file handling // get all data from txt and add that to arraylist
+
+        loadTextFileFromAsset();
+        gameModels.add(new GameModel("FPS","text","www.google.com","0",R.drawable.arma_thumb));
+        gameModels.add(new GameModel("RPG","text2","www.google.com","1",R.drawable.call_of_duty_thumb));
+        gameModels.add(new GameModel("FPS","text3","www.google.com","2",R.drawable.divinity_thumb));
+
+        recyclerViewAdapter = new RecyclerViewAdapter(getContext(),gameModels);
+        recyclerView = v.findViewById(R.id.recyclerView);
+
+        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(staggeredGridLayoutManager);
+        recyclerView.setAdapter(recyclerViewAdapter);
+        Toast.makeText(getContext(), String.valueOf(gameModels.size()), Toast.LENGTH_SHORT).show();
+
         return v;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        textView1.setText(mParam2);
-        GetImageAsyncTask getImageAsyncTask = new GetImageAsyncTask(imageView1);
-        getImageAsyncTask.execute(mParam1);
+    public String loadTextFileFromAsset(){
+        String content = null;
+        try{
+            InputStream inputStream = getContext().getAssets().open("games_items.txt");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            content = new String(buffer,"UTF-8");
+        }catch (IOException ex){
+            ex.printStackTrace();
+            return null;
+        }
+        return content;
     }
+
 }
