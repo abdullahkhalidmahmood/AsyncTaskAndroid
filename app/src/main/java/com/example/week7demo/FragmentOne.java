@@ -1,5 +1,6 @@
 package com.example.week7demo;
 
+import android.graphics.ColorSpace;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,15 +8,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
 public class FragmentOne extends Fragment {
@@ -30,9 +38,11 @@ public class FragmentOne extends Fragment {
     StaggeredGridLayoutManager staggeredGridLayoutManager;
     private ArrayList<GameModel> gameModels = new ArrayList<>();
 
-    private int count = 0;
+
     private GameModel gameModelData;
-    private BufferedReader bufferedReader = null;
+    private int countIterations = 0;
+    private BufferedReader reader = null;
+    InputStreamReader inputStreamReader;
 
 
     // TODO: Rename and change types of parameters
@@ -68,49 +78,145 @@ public class FragmentOne extends Fragment {
 
         //TODO: file handling // get all data from txt and add that to arraylist
 
-        //loadTextFileFromAsset();
-        gameModels.add(new GameModel("FPS", "text", "www.google.com", "0", R.drawable.arma_thumb));
-        gameModels.add(new GameModel("RPG", "text2", "www.google.com", "1", R.drawable.call_of_duty_thumb));
-        gameModels.add(new GameModel("FPS", "text3", "www.google.com", "2", R.drawable.divinity_thumb));
-
-
-        ArrayList<Boolean> arrayList = new ArrayList<>();
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader("games_items.txt"))){
-            boolean sCurrentLine;
-            while ((sCurrentLine = bufferedReader.readLine() !=null)){
-                arrayList.add(sCurrentLine);
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
 
 
 
-        recyclerViewAdapter = new RecyclerViewAdapter(getContext(), gameModels);
+
+
         recyclerView = v.findViewById(R.id.recyclerView);
+
 
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
-        recyclerView.setAdapter(recyclerViewAdapter);
-        Toast.makeText(getContext(), String.valueOf(gameModels.size()), Toast.LENGTH_SHORT).show();
+        getDataFromTheFile();
+
         return v;
     }
 
-  /*  public String loadTextFileFromAsset(){
-        String content = null;
-        try{
-            InputStream inputStream = getContext().getAssets().open("games_items.txt");
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
-            inputStream.read(buffer);
-            inputStream.close();
-            content = new String(buffer,"UTF-8");
-        }catch (IOException ex){
-            ex.printStackTrace();
-            return null;
+
+    private void getDataFromTheFile(){
+        try {
+            inputStreamReader = new InputStreamReader(getContext().getAssets().open("games_items.txt"));
+            reader = new BufferedReader(inputStreamReader);
+            gameModelData= new GameModel();
+
+            String line;
+            // conventional way of checking in while loop
+            while((line = reader.readLine())!= null ){
+                // trim the line after the ':' to extract and remove spaces
+                line = line.substring(line.indexOf(':') + 1).trim();
+                // 0 meaning its on the first line
+                int val=countIterations;
+                if( line.equals("First-Person Shooter"))
+                {
+                    Log.i("run",line );
+                    if(countIterations ==0){
+                        gameModelData.setCategory( line );
+                        // 1 meaning its on the second line
+                    } else if(countIterations ==1){
+                        ////gameModelData.setImage(line); 
+                        //int id = getResources().getIdentifier(line, "drawable", getContext().getPackageName());
+                        gameModelData.setImage(line);
+
+                    } else if(countIterations ==2){
+                        gameModelData.setTitle( line );
+                        // 3 is the date
+                    } else if(countIterations ==3){
+                        gameModelData.setWebsite( line );
+                    }
+                    else if(countIterations ==4){
+                        gameModelData.setScore( line );
+                    }
+                    countIterations++;
+
+                    if((countIterations!=0) && (countIterations%5 == 0)){
+                        Constants.fpsList.add(gameModelData);
+                        //Log.i( "aaa",ga.getScore() );
+                        gameModelData = new GameModel();
+                        countIterations = 0;
+
+
+                    }
+                }else {
+                    if(countIterations ==0){
+                        gameModelData.setCategory( line );
+                        // 1 meaning its on the second line
+                    } else if(countIterations ==1){
+                        ////gameModelData.setImage(line); 
+                        //int id = getResources().getIdentifier(line, "drawable", getContext().getPackageName());
+                        gameModelData.setImage(line);
+
+                    } else if(countIterations ==2){
+                        gameModelData.setTitle( line );
+                        // 3 is the date
+                    } else if(countIterations ==3){
+                        gameModelData.setWebsite( line );
+                    }
+                    else if(countIterations ==4){
+                        gameModelData.setScore( line );
+                    }
+                    countIterations++;
+
+                    if((countIterations!=0) && (countIterations%5 == 0)){
+                        Constants.rpList.add(gameModelData);
+                        //Log.i( "aaa",ga.getScore() );
+                        gameModelData = new GameModel();
+                        countIterations = 0;
+
+
+                    }
+                }
+
+            }
+
+            setUpArrayList( Constants.fpsList);
+
         }
-        return content;
+        catch (IOException e){
+            Toast.makeText(getContext(), "THE TEXT FILE THREW AN EXCEPTION", Toast.LENGTH_SHORT).show();
+            Log.e("TEXT FILE THREW ERROR", String.valueOf(e.getCause()));
+        }
+        finally {
+            if (reader != null) {
+                try {
+                    inputStreamReader.close();
+                    reader.close();
+
+                }catch (IOException e){
+                    Toast.makeText(getContext(), "STREAM TO THE FILE THREW AN EXCEPTION ON CLOSING", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private void setUpArrayList(ArrayList<GameModel> gameModels) {
+
+        recyclerViewAdapter = new RecyclerViewAdapter(getContext(), gameModels);
+        recyclerView.setAdapter(recyclerViewAdapter);
+        Log.i("size",String.valueOf(gameModels.size()));
+        Toast.makeText(getContext(), String.valueOf(gameModels.size()), Toast.LENGTH_SHORT).show();
+    }
+
+
+/*    public String loadTextFileFromAsset() {
+        try {
+            txtFileContent = new ArrayList<GameModel>();
+            InputStream inputStream = getContext().getAssets().open(filename);
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String line;
+                bufferedReader.readLine();
+                while ((line = bufferedReader.readLine()) != null) {
+                    txtFileContent.add(gameModelData);
+                }
+                inputStream.close();
+            } else {
+                System.out.println("It's the assets");
+            }
+        } catch (IOException e) {
+            System.out.println("Not able to read file correctly");
+        }
+        return null;
     }*/
-
-
-}
+    }

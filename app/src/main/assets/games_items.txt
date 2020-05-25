@@ -1,0 +1,45 @@
+category:First-Person Shooter
+photo:call_of_duty_thumb.jpg
+title:COD:Modern Warfare
+website:https://www.pcgamer.com/call-of-duty-modern-warfare-review/
+score:7.8
+category:First-Person Shooter
+photo:rainbow_six_siege_thumb.png
+title:Tom Clancy's Rainbow Six Siege
+website:https://www.pcgamer.com/rainbow-six-siege-review/
+score:8.2
+category:Role-Playing Game
+photo:witcher_thumb.png
+title:The Witcher 3: Wild Hunt
+website:https://www.pcgamer.com/the-witcher-3-review/
+score:8.9
+category:Role-Playing Game
+photo:divinity_thumb.png
+title:Divinity: Original Sin 2
+website:https://www.pcgamer.com/divinity-original-sin-2-review/
+score:9.0
+category:Role-Playing Game
+photo:outward_thumb.png
+title:Outward
+website:https://www.pcgamer.com/outward-review/
+score:7.5
+category:Role-Playing Game
+photo:kingdom_come_thumb.png
+title:Kingdom Come: Deliverance
+website:https://www.pcgamer.com/kingdom-come-deliverance-review/
+score:6.7
+category:First-Person Shooter
+photo:half_life_thumb.png
+title:Half-Life: Alyx
+website:https://www.pcgamer.com/half-life-alyx-review/
+score:8.4
+category:First-Person Shooter
+photo:arma_thumb.png
+title: Arma 3
+website:https://www.pcgamer.com/arma-3-review/
+score:7.8
+category:First-Person Shooter
+photo:overwatch_thumb.jpg
+title:Overwatch
+website:https://www.pcgamer.com/overwatch-review/
+score:8.8
