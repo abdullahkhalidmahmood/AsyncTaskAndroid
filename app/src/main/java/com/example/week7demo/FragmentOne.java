@@ -106,12 +106,15 @@ public class FragmentOne extends Fragment {
                 // trim the line after the ':' to extract and remove spaces
                 line = line.substring(line.indexOf(':') + 1).trim();
                 // 0 meaning its on the first line
-                int val=countIterations;
-                if( line.equals("First-Person Shooter"))
-                {
-                    Log.i("run",line );
-                    if(countIterations ==0){
-                        gameModelData.setCategory( line );
+
+                if(countIterations ==0){
+                        if(line.contains("First-Person Shooter")){
+
+                            gameModelData.setCategory( line );
+                        }else {
+
+                        }
+
                         // 1 meaning its on the second line
                     } else if(countIterations ==1){
                         ////gameModelData.setImage(line); 
@@ -131,43 +134,17 @@ public class FragmentOne extends Fragment {
 
                     if((countIterations!=0) && (countIterations%5 == 0)){
                         Constants.fpsList.add(gameModelData);
-                        //Log.i( "aaa",ga.getScore() );
+
                         gameModelData = new GameModel();
                         countIterations = 0;
 
 
                     }
-                }else {
-                    if(countIterations ==0){
-                        gameModelData.setCategory( line );
-                        // 1 meaning its on the second line
-                    } else if(countIterations ==1){
-                        ////gameModelData.setImage(line); 
-                        //int id = getResources().getIdentifier(line, "drawable", getContext().getPackageName());
-                        gameModelData.setImage(line);
-
-                    } else if(countIterations ==2){
-                        gameModelData.setTitle( line );
-                        // 3 is the date
-                    } else if(countIterations ==3){
-                        gameModelData.setWebsite( line );
-                    }
-                    else if(countIterations ==4){
-                        gameModelData.setScore( line );
-                    }
-                    countIterations++;
-
-                    if((countIterations!=0) && (countIterations%5 == 0)){
-                        Constants.rpList.add(gameModelData);
-                        //Log.i( "aaa",ga.getScore() );
-                        gameModelData = new GameModel();
-                        countIterations = 0;
 
 
-                    }
                 }
 
-            }
+
 
             setUpArrayList( Constants.fpsList);
 
